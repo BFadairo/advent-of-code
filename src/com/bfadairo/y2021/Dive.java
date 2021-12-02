@@ -10,7 +10,8 @@ public class Dive {
 
     public static void dive(String filePath) {
         List<Move> moves = readFile(filePath);
-        int product = calculatePosition(moves);
+        int position = calculatePosition(moves);
+        int positionWithAim = calculatePositionWithAim(moves);
     }
 
     static class Move {
@@ -30,8 +31,8 @@ public class Dive {
         try {
             Scanner sc = new Scanner(input);
             while (sc.hasNextLine()) {
-                String str = sc.nextLine();
-                String[] arr = str.split(" ");
+                String command = sc.nextLine();
+                String[] arr = command.split(" ");
                 Move move = new Move(arr[0], Integer.parseInt(arr[1]));
                 moves.add(move);
             }
@@ -59,6 +60,29 @@ public class Dive {
                     break;
                 case "down":
                     depth += move.amount;
+                    break;
+            }
+        }
+        return depth * horizontalPosition;
+    }
+
+    private static int calculatePositionWithAim(List<Move> moves) {
+        int aim = 0;
+        int depth = 0;
+        int horizontalPosition = 0;
+
+        for (int i = 0; i < moves.size(); i++) {
+            Move move = moves.get(i);
+            switch (move.direction) {
+                case "forward":
+                    horizontalPosition += move.amount;
+                    depth += aim * move.amount;
+                    break;
+                case "up":
+                    aim -= move.amount;
+                    break;
+                case "down":
+                    aim += move.amount;
                     break;
             }
         }
