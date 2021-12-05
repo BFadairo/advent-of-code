@@ -71,12 +71,11 @@ public class BinaryDiagnostic {
             Pair count = countNums(oxyGenerator, i);
             int numOfOnes = count.valOne;
             int numOfZeroes = count.valTwo;
-            Character common = numOfOnes >= numOfZeroes ? '1' : '0';
-            Character leastCommon = numOfZeroes <= numOfOnes ? '0' : '1';
+            Character commonChar = numOfOnes >= numOfZeroes ? '1' : '0';
 
             for (int j = 0; j < oxyGenerator.size(); j++) {
                 String diagnostic = oxyGenerator.get(j);
-                if (diagnostic.charAt(i) == leastCommon) {
+                if (diagnostic.charAt(i) != commonChar) {
                     oxyGenerator.remove(diagnostic);
                     j--;
                 }
@@ -95,13 +94,12 @@ public class BinaryDiagnostic {
             int numOfOnes = count.valOne;
             int numOfZeroes = count.valTwo;
 
-            Character common = numOfOnes >= numOfZeroes ? '1' : '0';
-            Character leastCommon = numOfZeroes <= numOfOnes ? '0' : '1';
+            Character commonChar = numOfOnes >= numOfZeroes ? '1' : '0';
 
             for (int j = 0; j < coScrubber.size(); j++) {
                 if (coScrubber.size() == 1) break;
                 String diagnostic = coScrubber.get(j);
-                if (diagnostic.charAt(i) == common) {
+                if (diagnostic.charAt(i) == commonChar) {
                     coScrubber.remove(diagnostic);
                     j--;
                 }
