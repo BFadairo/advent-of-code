@@ -6,12 +6,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+class Pair {
+    int valOne;
+    int valTwo;
+
+    public Pair(int one, int two) {
+        this.valOne = one;
+        this.valTwo = two;
+    }
+}
+
 public class BinaryDiagnostic {
 
     public static void diagnose(String filePath) {
         List<String> inputs = readFile(filePath);
         double powerConsumption = partOne(inputs);
-        System.out.println(powerConsumption);
+        double oxygenRating = partTwo(inputs);
+        double co2Rating = partTwoCoTwo(inputs);
+        System.out.println(oxygenRating * co2Rating);
     }
 
     private static List<String> readFile(String filePath) {
@@ -26,7 +38,6 @@ public class BinaryDiagnostic {
         } catch (FileNotFoundException e) {
             System.out.printf("There was an issue locating the file: %s", e.getMessage());
         }
-
         return inputList;
     }
 
@@ -34,22 +45,15 @@ public class BinaryDiagnostic {
         StringBuilder gamma = new StringBuilder();
         StringBuilder epsilon = new StringBuilder();
         int length = inputs.get(0).length();
-        for (int i = 0; i < length ; i++) {
-            int numOfZeros = 0;
-            int numOfOnes = 0;
-            for (int j = 0; j < inputs.size(); j++) {
-                String binaryString = inputs.get(j);
-                char currentNum = binaryString.charAt(i);
-                if (currentNum == '0') {
-                    numOfZeros++;
-                } else {
-                    numOfOnes++;
-                }
-            }
+        for (int i = 0; i < length; i++) {
+            Pair count = countNums(inputs, i);
+            int numOfZeros = count.valOne;
+            int numOfOnes = count.valTwo;
+
             if (numOfOnes > numOfZeros) {
                 gamma.append("1");
                 epsilon.append("0");
-            } else {
+            } else if (numOfOnes < numOfZeros) {
                 gamma.append("0");
                 epsilon.append("1");
             }
@@ -59,8 +63,67 @@ public class BinaryDiagnostic {
         return gammaD * epsilonD;
     }
 
-    private static void partTwo(List<String> inputs) {
+    private static double partTwo(List<String> inputs) {
+        List<String> oxyGenerator = new ArrayList<>(inputs.size());
+        oxyGenerator.addAll(inputs);
+        int length = inputs.get(0).length();
+        for (int i = 0; i < length; i++) {
+            Pair count = countNums(oxyGenerator, i);
+            int numOfOnes = count.valOne;
+            int numOfZeroes = count.valTwo;
+            Character common = numOfOnes >= numOfZeroes ? '1' : '0';
+            Character leastCommon = numOfZeroes <= numOfOnes ? '0' : '1';
 
+            for (int j = 0; j < oxyGenerator.size(); j++) {
+                String diagnostic = oxyGenerator.get(j);
+                if (diagnostic.charAt(i) == leastCommon) {
+                    oxyGenerator.remove(diagnostic);
+                    j--;
+                }
+            }
+        }
+
+        return convertToDecimal(oxyGenerator.get(0));
+    }
+
+    private static double partTwoCoTwo(List<String> inputs) {
+        List<String> coScrubber = new ArrayList<>(inputs.size());
+        coScrubber.addAll(inputs);
+        int length = inputs.get(0).length();
+        for (int i = 0; i < length; i++) {
+            Pair count = countNums(coScrubber, i);
+            int numOfOnes = count.valOne;
+            int numOfZeroes = count.valTwo;
+
+            Character common = numOfOnes >= numOfZeroes ? '1' : '0';
+            Character leastCommon = numOfZeroes <= numOfOnes ? '0' : '1';
+
+            for (int j = 0; j < coScrubber.size(); j++) {
+                if (coScrubber.size() == 1) break;
+                String diagnostic = coScrubber.get(j);
+                if (diagnostic.charAt(i) == common) {
+                    coScrubber.remove(diagnostic);
+                    j--;
+                }
+            }
+        }
+
+        return convertToDecimal(coScrubber.get(0));
+    }
+
+    private static Pair countNums(List<String> inputs, int index) {
+        int numOfZeros = 0;
+        int numOfOnes = 0;
+        for (int j = 0; j < inputs.size(); j++) {
+            String binaryString = inputs.get(j);
+            char currentNum = binaryString.charAt(index);
+            if (currentNum == '0') {
+                numOfZeros++;
+            } else {
+                numOfOnes++;
+            }
+        }
+        return new Pair(numOfOnes, numOfZeros);
     }
 
     private static double convertToDecimalManual(String input) {
