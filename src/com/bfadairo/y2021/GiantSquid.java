@@ -14,6 +14,7 @@ public class GiantSquid {
         List<int[][]> bingoBoards = readFile(filePath, queue);
 //        int score = partOne(bingoBoards, queue);
         int score = partTwo(bingoBoards, queue);
+        System.out.println(score);
     }
 
     private static List<int[][]> readFile(String filePath, Queue<Integer> q) {
@@ -48,7 +49,6 @@ public class GiantSquid {
     }
 
     private static int partOne(List<int[][]> boards, Queue<Integer> queue) {
-        List<Integer> pulledNumbers = new ArrayList<>();
 
         while (!queue.isEmpty()) {
             int pulledNum = queue.poll();
@@ -65,14 +65,10 @@ public class GiantSquid {
     }
 
     private static int partTwo(List<int[][]> boards, Queue<Integer> queue) {
-        List<Integer> pulledNumbers = new ArrayList<>();
-
-        int listSize = boards.size();
 
         List<int[][]> cloneBoards = new ArrayList<>(boards);
         while (!queue.isEmpty()) {
             int pulledNum = queue.poll();
-            HashSet<int[][]> winners = new HashSet<>();
             for (int[][] board : boards) {
                 updateBoard(board, pulledNum);
                 boolean winner = checkForWinner(board);
@@ -101,25 +97,7 @@ public class GiantSquid {
         }
     }
 
-    private static boolean checkForWinner(int[][] board) {
-        int rows = board.length;
-        int cols = board[0].length;
-
-        // Check rows
-        for (int i = 0; i < rows; i++) {
-            int positiveSum = 0;
-            for (int j = 0; j < cols; j++) {
-                int value = board[i][j];
-                if (value > 0) {
-                    positiveSum += value;
-                }
-            }
-            if (positiveSum == 0) {
-//                System.out.println("Found winning row");
-                return true;
-            }
-        }
-
+    private static boolean checkColumnForWinner(int[][] board, int cols, int rows) {
         // Check columns
         for (int column = 0; column < cols; column++) {
             int positiveSum = 0;
@@ -130,12 +108,33 @@ public class GiantSquid {
                 }
             }
             if (positiveSum == 0) {
-//                System.out.println("found winning column");
                 return true;
             }
         }
-
         return false;
+    }
+
+    private static boolean checkRowForWinner(int[][] board, int rows, int cols) {
+        // Check rows
+        for (int i = 0; i < rows; i++) {
+            int positiveSum = 0;
+            for (int j = 0; j < cols; j++) {
+                int value = board[i][j];
+                if (value > 0) {
+                    positiveSum += value;
+                }
+            }
+            if (positiveSum == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+    private static boolean checkForWinner(int[][] board) {
+        int rows = board.length;
+        int cols = board[0].length;
+
+        return checkRowForWinner(board, rows, cols) || checkColumnForWinner(board, cols, rows);
     }
 
     private static int calculateUnmarkedSum(int[][] board) {
@@ -149,7 +148,6 @@ public class GiantSquid {
                     unmarkedSum += board[i][j];
                 }
             }
-            System.out.println(unmarkedSum);
         }
 
         return unmarkedSum;
