@@ -10,7 +10,7 @@ public class WhaleTreachery {
 
     public static void align(String filePath) {
         int[] submarinePositions = readFile(filePath);
-        System.out.println(calculateFuel(submarinePositions));
+        System.out.println(calculateFuelPartOne(submarinePositions));
     }
 
     public static int[] readFile(String filePath) {
@@ -29,18 +29,19 @@ public class WhaleTreachery {
         return positionsArr;
     }
 
-    private static int calculateFuel(int[] positions) {
+    private static int calculateFuelPartOne(int[] positions) {
 
         int minFuel = Integer.MAX_VALUE;
 
         for (int i = 1; i < positions.length; i++) {
-            int fuelCost = 0;
+            int totalFuelCost = 0;
+
             for (int j = 0; j < positions.length; j++) {
-                fuelCost += Math.abs(positions[j] - i);
+                totalFuelCost += Math.abs(positions[j] - i);
             }
 
-            minFuel = Math.min(fuelCost, minFuel);
-//            System.out.printf("Fuel Cost: %d, Position: %d\n", fuelCost, i);
+            minFuel = Math.min(totalFuelCost, minFuel);
+            System.out.printf("Fuel Cost: %d, Position: %d\n", totalFuelCost, i);
         }
         return minFuel;
     }
