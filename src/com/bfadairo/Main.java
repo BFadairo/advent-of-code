@@ -10,6 +10,7 @@ public class Main {
 //        Dive.dive("src/com/bfadairo/y2021/inputs/day-2.txt");
 //        BinaryDiagnostic.diagnose("src/com/bfadairo/y2021/inputs/day-3.txt");
 //        GiantSquid.bingo("src/com/bfadairo/y2021/inputs/day-4.txt");
-        HydrothermalVenture.venture("src/com/bfadairo/y2021/inputs/day-5.txt");
+//        HydrothermalVenture.venture("src/com/bfadairo/y2021/inputs/day-5.txt");
+        LanternFish.track("src/com/bfadairo/y2021/inputs/day-6.txt");
     }
 }
