@@ -109,7 +109,6 @@ public class HydrothermalVenture {
     }
 
     private static int[][] partTwo(int[][] plane, List<String[]> coordinates, Pair bounds) {
-        int[][] planeTest = new int[bounds.valTwo][bounds.valOne];
         for (String[] coordinate: coordinates) {
             int x1 = Integer.parseInt(coordinate[0]);
             int y1 = Integer.parseInt(coordinate[1]);
