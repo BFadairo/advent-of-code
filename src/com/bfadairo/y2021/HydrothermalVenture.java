@@ -14,6 +14,8 @@ public class HydrothermalVenture {
         Pair maxXAndY = findMaxXAndY(coordinatePairs);
         int[][] plane = plotCoordinates(coordinatePairs, maxXAndY);
         int intersections = countIntersectionPoints(plane);
+        int[][] partTwoPlane = partTwo(plane, coordinatePairs, maxXAndY);
+        int partTwoIntersections = countIntersectionPoints(plane);
     }
 
     private static List<String[]> readFile(String filePath) {
@@ -51,8 +53,9 @@ public class HydrothermalVenture {
 
         return new Pair(maxX + 1, maxY + 1);
     }
+
     private static int[][] plotCoordinates(List<String[]> coordinates, Pair bounds) {
-        int[][] plane = new int[bounds.valOne][bounds.valTwo];
+        int[][] plane = new int[bounds.valTwo][bounds.valOne];
 
         for (String[] coordinate: coordinates) {
             int x1 = Integer.parseInt(coordinate[0]);
@@ -84,6 +87,41 @@ public class HydrothermalVenture {
                 }
             }
         }
+        return plane;
+    }
+
+    private static void plotDiagonals(int[][] plane, int x1, int x2, int y1, int y2) {
+        int maxX = Math.max(x1, x2);
+        int maxY = Math.max(y1, y2);
+        int minX = Math.min(x1, x2);
+        int minY = Math.min(y1, y2);
+
+        int x = x1;
+        int y = y1;
+
+        while (true) {
+            plane[y][x]++;
+            if (x == x2) break;
+            if (y == y2) break;
+            if (x2 > x) x++; else x--;
+            if (y2 > y) y++; else y--;
+        }
+    }
+
+    private static int[][] partTwo(int[][] plane, List<String[]> coordinates, Pair bounds) {
+        int[][] planeTest = new int[bounds.valTwo][bounds.valOne];
+        for (String[] coordinate: coordinates) {
+            int x1 = Integer.parseInt(coordinate[0]);
+            int y1 = Integer.parseInt(coordinate[1]);
+            int x2 = Integer.parseInt(coordinate[2]);
+            int y2 = Integer.parseInt(coordinate[3]);
+            if (x1 != x2 && y1 != y2) plotDiagonals(plane, x1, x2, y1, y2);
+        }
+
+//        for (int i = 0; i < plane.length; i++) {
+//            System.out.println(Arrays.toString(plane[i]));
+//        }
+
         return plane;
     }
 
